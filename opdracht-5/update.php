@@ -13,9 +13,13 @@ if (isset($_POST['versturen'])) {
     $prijs = $_POST["prijs_per_stuk"];
     $omschrijving = $_POST["omschrijving"];
 
-    $sql = "UPDATE producten SET product_naam=?, prijs_per_stuk=?, omschrijving=? WHERE product_code=?";
-    $stmt= $pdo->prepare($sql);
-    $stmt->execute([$product_naam, $prijs, $omschrijving, $product_code]);
+    if (!empty($product_code) && !empty($product_naam) && !empty($prijs) && !empty($omschrijving)) {
+        $sql = "UPDATE producten SET product_naam=?, prijs_per_stuk=?, omschrijving=? WHERE product_code=?";
+        $stmt= $pdo->prepare($sql);
+        $stmt->execute([$product_naam, $prijs, $omschrijving, $product_code]);
+    } else {
+        $error = "Vul alle velden in.";
+    }
 }
 
 ?>
@@ -27,4 +31,11 @@ if (isset($_POST['versturen'])) {
     <input type="number" name="prijs_per_stuk" placeholder="prijs"><br>
     <input type="text" name="omschrijving" placeholder="omschrijving"><br>
     <input type="submit" name="versturen"><br>
+    <?php
+
+    if(!empty($error)) {
+        echo $error;
+    }
+    
+    ?>
 </form>
